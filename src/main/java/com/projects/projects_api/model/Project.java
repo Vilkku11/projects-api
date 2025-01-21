@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "projects")
 public class Project {
 
     @Id
@@ -17,10 +18,10 @@ public class Project {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name= "created_at", nullable = false, updatable = false)
     private LocalDateTime createdTimestamp;
 
-    @Column(nullable = false)
+    @Column(name="updated_timestamp", nullable = false)
     private LocalDateTime updatedTimestamp;
 
     public Project() {}
