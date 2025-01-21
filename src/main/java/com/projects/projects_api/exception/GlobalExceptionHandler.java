@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
     String projectNotFoundHandler(ProjectException.ProjectNotFoundException ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(ProjectException.ProjectNameInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String projectNameInvalidHandler(ProjectException.ProjectNameInvalidException ex) {
+        return ex.getMessage();
+    }
 }

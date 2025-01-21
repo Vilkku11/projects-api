@@ -7,4 +7,10 @@ public class ProjectException {
             super("Could not find project " +id);
         }
     }
+
+    public static class ProjectNameInvalidException extends RuntimeException {
+        public ProjectNameInvalidException(String text) {
+            super(text);
+        }
+    }
 }
