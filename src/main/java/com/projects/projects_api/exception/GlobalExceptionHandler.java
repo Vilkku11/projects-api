@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
     String projectNameInvalidHandler(ProjectException.ProjectNameInvalidException ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(UserException.UserAlreadyExists.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String userAlreadyExistsHandler(UserException.UserAlreadyExists ex) {
+        return ex.getMessage();
+    }
 }
