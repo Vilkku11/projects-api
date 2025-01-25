@@ -1,9 +1,11 @@
 package com.projects.projects_api.repository;
 
-import com.projects.projects_api.model.User;
+import com.projects.projects_api.model.MyUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
-    User findByUsername(String username);
+public interface UserRepository extends JpaRepository<MyUser, Long> {
+
+    Optional<MyUser> findByUsername(String username);
 }

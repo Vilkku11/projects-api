@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name= "users")
-public class User {
+public class MyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +16,23 @@ public class User {
 
     private String password;
 
-    public User() {}
+    public MyUser() {}
 
-    public User(String username, String password) {
+    public MyUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    @ManyToOne
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdTimestamp = now;
+        this.updatedTimestamp = now;
+    }
+
+    /*@ManyToOne
     @JoinColumn(name = "fk_role_id")
-    private Role role;
+    private Role role;*/
 
     @Column(name= "created_at", nullable = false, updatable = false)
     private LocalDateTime createdTimestamp;
@@ -58,13 +65,13 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+  /*  public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
-    }
+    }*/
 
     public LocalDateTime getCreatedTimestamp() {
         return createdTimestamp;
