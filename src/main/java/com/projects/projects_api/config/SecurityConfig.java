@@ -2,7 +2,9 @@ package com.projects.projects_api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,15 +14,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -31,18 +36,11 @@ public class SecurityConfig {
             registry.requestMatchers("/projects", "/register", "/login").permitAll();
             registry.anyRequest().authenticated();
         })
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                //.formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-   /* @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails normalUser = User.builder()
-                .username("test")
-                .password("$2a$12$fIcpUvVnqlObhXOvn8hEyeiIjc1.mQVzGclrYOQF2mL1qYSDd60D6")
-                .build();
-        return new InMemoryUserDetailsManager(normalUser);
-    }*/
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -55,6 +53,11 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(authenticationProvider());
     }
 
     @Bean

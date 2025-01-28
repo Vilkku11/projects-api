@@ -1,5 +1,6 @@
 package com.projects.projects_api.controller;
 
+import com.projects.projects_api.dto.UserDto;
 import com.projects.projects_api.model.MyUser;
 import com.projects.projects_api.repository.UserRepository;
 import com.projects.projects_api.service.UserService;
@@ -33,4 +34,11 @@ public class UserController {
     public MyUser createUser(@RequestBody MyUser user){
         return userService.registerUser(user);
 
-    }}
+    }
+
+    @PostMapping("/login")
+    public String authenticateAndGetToken(@RequestBody UserDto userDto) {
+        return userService.loginUser(userDto);
+    }
+
+}
