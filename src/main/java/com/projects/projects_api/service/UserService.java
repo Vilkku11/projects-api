@@ -35,13 +35,15 @@ public class UserService{
     }
 
 
-    public MyUser registerUser(MyUser user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UserException.UserAlreadyExists(user.getUsername());
-        }
+    public MyUser registerUser(UserDto user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        if (userRepository.findByUsername(user.username()).isPresent()) {
+            throw new UserException.UserAlreadyExists(user.username());
+        }
+        MyUser newUser = new MyUser();
+        newUser.setUsername(user.username());
+        newUser.setPassword(passwordEncoder.encode(user.password()));
+        return userRepository.save(newUser);
     }
 
    public String loginUser(UserDto userDto) {

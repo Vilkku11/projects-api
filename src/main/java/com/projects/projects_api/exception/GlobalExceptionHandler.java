@@ -25,4 +25,12 @@ public class GlobalExceptionHandler {
     String userAlreadyExistsHandler(UserException.UserAlreadyExists ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(UserException.InvalidUsernameOrPassword.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String InvalidUsernameOrPasswordHandler(UserException.InvalidUsernameOrPassword ex) {
+        return ex.getMessage();
+    }
 }
+
+

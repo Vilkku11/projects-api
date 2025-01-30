@@ -7,4 +7,10 @@ public class UserException {
             super("User " + username + " already exists.");
         }
     }
+
+    public static class InvalidUsernameOrPassword extends RuntimeException {
+        public InvalidUsernameOrPassword() {
+            super("Invalid username or password");
+        }
+    }
 }

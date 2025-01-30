@@ -17,13 +17,9 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserService userService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public UserController(UserService userService) {
         this.userService = userService;
 
     }
@@ -31,7 +27,7 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public MyUser createUser(@RequestBody MyUser user){
+    public MyUser createUser(@RequestBody UserDto user){
         return userService.registerUser(user);
 
     }

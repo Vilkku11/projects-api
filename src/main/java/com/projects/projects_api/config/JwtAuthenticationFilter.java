@@ -37,18 +37,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(7);
         String username = jwtService.extractUsername(jwt);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-               UserDetails userDetails = userDetailService.loadUserByUsername(username);
-               if (userDetails != null && jwtService.isTokenValid(jwt)){
-                   UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                           username,
-                           userDetails.getPassword(),
-                           userDetails.getAuthorities()
-                   );
-                   authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                   SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-               }
+
+        if (username == null && SecurityContextHolder.getContext().getAuthentication() != null){
+            filterChain.doFilter(request, response);
+            return;
         }
+       UserDetails userDetails = userDetailService.loadUserByUsername(username);
+
+       if (userDetails == null && !jwtService.isTokenValid(jwt)){
+           filterChain.doFilter(request, response);
+           return;
+       }
+       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+               username,
+               userDetails.getPassword(),
+               userDetails.getAuthorities()
+       );
+       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+
         filterChain.doFilter(request, response);
     }
 }
