@@ -25,17 +25,21 @@ public class UserService{
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailService userDetailService;
+    private final ObjectValidator objectValidator;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, UserDetailService userDetailService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, UserDetailService userDetailService, ObjectValidator objectValidator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailService = userDetailService;
+        this.objectValidator = objectValidator;
     }
 
 
     public MyUser registerUser(UserDto user) {
+
+
 
         if (userRepository.findByUsername(user.username()).isPresent()) {
             throw new UserException.UserAlreadyExists(user.username());
@@ -47,6 +51,11 @@ public class UserService{
     }
 
    public String loginUser(UserDto userDto) {
+
+        var violations = objectValidator.validate(userDto);
+        if(!violations.isEmpty()){
+            throw new UserException.InvalidUsernameOrPassword();
+        }
 
        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                userDto.username(), userDto.password()
