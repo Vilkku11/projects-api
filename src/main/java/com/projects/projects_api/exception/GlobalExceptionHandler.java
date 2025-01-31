@@ -31,6 +31,12 @@ public class GlobalExceptionHandler {
     String InvalidUsernameOrPasswordHandler(UserException.InvalidUsernameOrPassword ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(UserException.PasswordTooShort.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String PasswordTooShort(UserException.PasswordTooShort ex) {
+        return ex.getMessage();
+    }
 }
 
 

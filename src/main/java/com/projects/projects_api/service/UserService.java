@@ -37,16 +37,23 @@ public class UserService{
     }
 
 
-    public MyUser registerUser(UserDto user) {
+    public MyUser registerUser(UserDto userDto) {
 
+        var violations = objectValidator.validate(userDto);
+        if(!violations.isEmpty()) {
+            throw new UserException.InvalidUsernameOrPassword();
+        }
 
+        if (userDto.password().length() < 5) {
+            throw new UserException.PasswordTooShort();
+        }
 
-        if (userRepository.findByUsername(user.username()).isPresent()) {
-            throw new UserException.UserAlreadyExists(user.username());
+        if (userRepository.findByUsername(userDto.username()).isPresent()) {
+            throw new UserException.UserAlreadyExists(userDto.username());
         }
         MyUser newUser = new MyUser();
-        newUser.setUsername(user.username());
-        newUser.setPassword(passwordEncoder.encode(user.password()));
+        newUser.setUsername(userDto.username());
+        newUser.setPassword(passwordEncoder.encode(userDto.password()));
         return userRepository.save(newUser);
     }
 
@@ -63,7 +70,7 @@ public class UserService{
        if (authentication.isAuthenticated()){
             return jwtService.generateToken(userDetailService.loadUserByUsername(userDto.username()));
        } else {
-           throw new UsernameNotFoundException("Invalid credentials");
+           throw new UserException.InvalidUsernameOrPassword();
        }
    }
 
