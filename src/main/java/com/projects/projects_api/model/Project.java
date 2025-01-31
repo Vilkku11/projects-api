@@ -18,6 +18,9 @@ public class Project {
     @Column(nullable = false, length = 1000)
     private String description;
 
+    @Column(nullable = false)
+    private Long user_id;
+
     @Column(name= "created_at", nullable = false, updatable = false)
     private LocalDateTime createdTimestamp;
 
@@ -26,9 +29,10 @@ public class Project {
 
     public Project() {}
 
-    public Project(String name, String description) {
+    public Project(String name, String description, Long user_id) {
         this.name = name;
         this.description = description;
+        this.user_id = user_id;
         this.createdTimestamp = LocalDateTime.now();
         this.updatedTimestamp = LocalDateTime.now();
     }
@@ -57,6 +61,14 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getUserId() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public LocalDateTime getCreatedTimestamp() {

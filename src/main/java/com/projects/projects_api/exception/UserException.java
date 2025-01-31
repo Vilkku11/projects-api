@@ -17,4 +17,8 @@ public class UserException {
     public static class PasswordTooShort extends  RuntimeException {
         public PasswordTooShort(){ super("Password needs to be at least 5 characters long.");}
     }
+
+    public static class UserSaveFail extends  RuntimeException {
+        public UserSaveFail() {super("There was an error on creating account");}
+    }
 }

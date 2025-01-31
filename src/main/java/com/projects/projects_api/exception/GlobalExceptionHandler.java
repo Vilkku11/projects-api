@@ -37,6 +37,12 @@ public class GlobalExceptionHandler {
     String PasswordTooShort(UserException.PasswordTooShort ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(UserException.UserSaveFail.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String UserSaveFail(UserException.UserSaveFail ex) {
+        return ex.getMessage();
+    }
 }
 
 

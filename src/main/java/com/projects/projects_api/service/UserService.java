@@ -37,7 +37,7 @@ public class UserService{
     }
 
 
-    public MyUser registerUser(UserDto userDto) {
+    public String registerUser(UserDto userDto) {
 
         var violations = objectValidator.validate(userDto);
         if(!violations.isEmpty()) {
@@ -54,7 +54,13 @@ public class UserService{
         MyUser newUser = new MyUser();
         newUser.setUsername(userDto.username());
         newUser.setPassword(passwordEncoder.encode(userDto.password()));
-        return userRepository.save(newUser);
+        MyUser user = userRepository.save(newUser);
+
+        if (user.getId() == null) {
+            throw new UserException.UserSaveFail();
+        }
+
+        return authenticate(userDto);
     }
 
    public String loginUser(UserDto userDto) {
@@ -63,12 +69,16 @@ public class UserService{
         if(!violations.isEmpty()){
             throw new UserException.InvalidUsernameOrPassword();
         }
+        return authenticate(userDto);
 
+   }
+
+   private String authenticate(UserDto userDto) {
        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                userDto.username(), userDto.password()
        ));
        if (authentication.isAuthenticated()){
-            return jwtService.generateToken(userDetailService.loadUserByUsername(userDto.username()));
+           return jwtService.generateToken(userDetailService.loadUserByUsername(userDto.username()));
        } else {
            throw new UserException.InvalidUsernameOrPassword();
        }
