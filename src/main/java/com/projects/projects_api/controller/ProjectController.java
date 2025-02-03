@@ -1,6 +1,7 @@
 package com.projects.projects_api.controller;
 
 
+import com.projects.projects_api.dto.ProjectDto;
 import com.projects.projects_api.exception.ProjectException;
 import com.projects.projects_api.model.Project;
 import com.projects.projects_api.service.ProjectService;
@@ -28,15 +29,15 @@ public class ProjectController {
     }
 
     @PostMapping("/projects")
-        Project newProject(@RequestBody Project newProject) {
+        ProjectDto newProject(@RequestBody ProjectDto newProject) {
+            projectService.addProject(newProject);
             projectService.validateProjectName(newProject);
             return repository.save(newProject);
         }
 
     @GetMapping("/projects/{id}")
-    Project one(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ProjectException.ProjectNotFoundException(id));
+    ProjectDto one(@PathVariable Long id) {
+        return projectService.getProject(id);
     }
 
     @PutMapping("/projects/{id}")

@@ -39,10 +39,7 @@ public class UserService{
 
     public String registerUser(UserDto userDto) {
 
-        var violations = objectValidator.validate(userDto);
-        if(!violations.isEmpty()) {
-            throw new UserException.InvalidUsernameOrPassword();
-        }
+        validate(userDto);
 
         if (userDto.password().length() < 5) {
             throw new UserException.PasswordTooShort();
@@ -65,12 +62,16 @@ public class UserService{
 
    public String loginUser(UserDto userDto) {
 
-        var violations = objectValidator.validate(userDto);
-        if(!violations.isEmpty()){
-            throw new UserException.InvalidUsernameOrPassword();
-        }
+        validate(userDto);
         return authenticate(userDto);
 
+   }
+
+   private void validate(UserDto userDto) {
+        var violations = objectValidator.validate(userDto);
+       if(!violations.isEmpty()) {
+           throw new UserException.InvalidUsernameOrPassword();
+       }
    }
 
    private String authenticate(UserDto userDto) {
