@@ -7,6 +7,7 @@ import com.projects.projects_api.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -66,6 +67,14 @@ public class UserService{
         return authenticate(userDto);
 
    }
+
+    public MyUser getUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(UserException.InvalidUsernameOrPassword::new);
+    }
 
    private void validate(UserDto userDto) {
         var violations = objectValidator.validate(userDto);

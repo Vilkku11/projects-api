@@ -1,5 +1,6 @@
 package com.projects.projects_api.service;
 
+import com.projects.projects_api.exception.UserException;
 import com.projects.projects_api.model.MyUser;
 import com.projects.projects_api.repository.UserRepository;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +22,7 @@ public class UserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UserException.InvalidUsernameOrPassword {
         Optional<MyUser> user = userRepository.findByUsername(username);
         if (user.isPresent()){
             var userObj = user.get();
@@ -30,7 +31,7 @@ public class UserDetailService implements UserDetailsService {
                     .password(userObj.getPassword())
                     .build();
         }else {
-            throw new UsernameNotFoundException(username);
+            throw new UserException.InvalidUsernameOrPassword();
         }
     }
 
