@@ -12,8 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -34,6 +36,15 @@ public class ProjectService {
         if (project.getName() == null || project.getName().isEmpty()) {
             throw new ProjectException.ProjectNameInvalidException("Project name must not be empty");
         }
+    }
+
+    public List<ProjectDto> getProjects(){
+        MyUser user = userService.getUser();
+        List<Project> projects = repository.findByUserId(user.getId());
+
+        return projects.stream()
+                .map(projectMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public ProjectDto getProject(Long id){

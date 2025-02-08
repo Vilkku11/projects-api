@@ -24,8 +24,8 @@ public class ProjectController {
     }
 
     @GetMapping("/projects")
-    List<Project> all() {
-        return repository.findAll();
+    List<ProjectDto> all() {
+        return projectService.getProjects();
     }
 
     @PostMapping("/projects")
