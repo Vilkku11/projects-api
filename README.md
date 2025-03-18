@@ -1,4 +1,6 @@
 # Projects-api
 
-- Springboot api with PostgreSQL database and authentication using JWT
-- Work in progress...
+- API made with Java Springboot
+- PostgreSQL database
+- JWT Token authentication
+- Save and view own projects
